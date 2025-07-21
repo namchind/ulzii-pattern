@@ -191,6 +191,8 @@ function createPatternGrid(containerId, options = {}) {
     const {
         maxL = 20,
         maxR = 20,
+        minL = 1,
+        minR = 1,
         cellSize = 20,
         lineWidth = 1,
         onPatternSelect = null
@@ -236,7 +238,7 @@ function createPatternGrid(containerId, options = {}) {
     colHeaders.appendChild(cornerCell);
     
     // Column headers (L values)
-    for (let lside = 4; lside <= maxL; lside++) {
+    for (let lside = minL; lside <= maxL; lside++) {
         const header = document.createElement('div');
         header.style.width = `${cellSize}px`;
         header.style.height = `${cellSize}px`;
@@ -254,7 +256,7 @@ function createPatternGrid(containerId, options = {}) {
     // Create main grid container
     const mainGrid = document.createElement('div');
     mainGrid.style.display = 'grid';
-    mainGrid.style.gridTemplateColumns = `${cellSize + 10}px repeat(${maxL-3}, ${cellSize}px)`;
+    mainGrid.style.gridTemplateColumns = `${cellSize + 10}px repeat(${maxL-minL+1}, ${cellSize}px)`;
     mainGrid.style.gap = '1px';
     
     // Store cell references for keyboard navigation
@@ -290,7 +292,7 @@ function createPatternGrid(containerId, options = {}) {
     
     function getValidRValues() {
         const rValues = [];
-        for (let r = 3; r <= maxR; r += 2) {
+        for (let r = minR; r <= maxR; r += 2) {
             rValues.push(r);
         }
         return rValues;
@@ -298,13 +300,13 @@ function createPatternGrid(containerId, options = {}) {
     
     function getValidLValues() {
         const lValues = [];
-        for (let l = 4; l <= maxL; l++) {
+        for (let l = minL; l <= maxL; l++) {
             lValues.push(l);
         }
         return lValues;
     }
     
-    for (let rside = 3; rside <= maxR; rside += 2) {
+    for (let rside = minR; rside <= maxR; rside += 2) {
         // Add row header (R value)
         const rowHeader = document.createElement('div');
         rowHeader.style.width = `${cellSize + 10}px`;
@@ -319,7 +321,7 @@ function createPatternGrid(containerId, options = {}) {
         rowHeader.textContent = `R${rside}`;
         mainGrid.appendChild(rowHeader);
         
-        for (let lside = 4; lside <= maxL; lside++) {
+        for (let lside = minL; lside <= maxL; lside++) {
             const cell = document.createElement('div');
             cell.style.width = `${cellSize}px`;
             cell.style.height = `${cellSize}px`;
