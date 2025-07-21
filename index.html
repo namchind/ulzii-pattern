@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Endless Knot Pattern Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .control-group {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .control-group label {
+            min-width: 120px;
+            font-weight: bold;
+        }
+        input[type="range"] {
+            flex: 1;
+            max-width: 300px;
+        }
+        input[type="color"] {
+            width: 50px;
+            height: 30px;
+            border: none;
+            border-radius: 5px;
+        }
+        .output-value {
+            min-width: 60px;
+            text-align: right;
+            font-weight: bold;
+            color: #666;
+        }
+        #singlePattern {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin: 20px 0;
+            padding: 20px;
+            text-align: center;
+            background: white;
+        }
+        #patternGrid {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            background: white;
+            overflow: auto;
+            max-height: 700px;
+        }
+        #patternGrid:focus {
+            border-color: #0066cc;
+            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        .pattern-info {
+            margin: 10px 0;
+            padding: 10px;
+            background: #e9f7ef;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .endless {
+            color: green;
+            font-weight: bold;
+        }
+        . {
+            color: red;
+            font-weight: bold;
+        }
+        .selected-pattern {
+            border: 2px solid #0066cc !important;
+        }
+        .grid-instructions {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f0f8ff;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+        .grid-label {
+            font-size: 8px;
+            font-weight: bold;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 Endless Knot Pattern Generator</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 30px;">
+            Interactive visualization of endless knot patterns based on mathematical algorithms
+        </p>
+        
+        <div class="controls">
+            <h3>Pattern Controls</h3>
+            
+            <div class="control-group">
+                <label for="ldiag">Length (ldiag):</label>
+                <input type="range" id="ldiag" min="4" max="105" value="8" step="1">
+                <span class="output-value" id="ldiagValue">8</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="rdiag">Width (rdiag):</label>
+                <input type="range" id="rdiag" min="1" max="99" value="5" step="2">
+                <span class="output-value" id="rdiagValue">5</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="rotation">Rotation:</label>
+                <input type="range" id="rotation" min="0" max="360" value="135" step="15">
+                <span class="output-value" id="rotationValue">0°</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="scale">Scale:</label>
+                <input type="range" id="scale" min="0.1" max="3.0" value="0.9" step="0.1">
+                <span class="output-value" id="scaleValue">0.9x</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="lineWidth">Line Width:</label>
+                <input type="range" id="lineWidth" min="1" max="10" value="2" step="1">
+                <span class="output-value" id="lineWidthValue">2px</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="strokeColor">Color:</label>
+                <input type="color" id="strokeColor" value="#0066cc">
+            </div>
+        </div>
+        
+        <h2>Single Pattern</h2>
+        <div id="singlePattern">
+            <div id="singlePatternCanvas"></div>
+            <div id="patternInfo" class="pattern-info"></div>
+        </div>
+        
+        <h2>Pattern Grid (Green = Complete Loop, Red = Multi-part)</h2>
+        <div class="grid-instructions">
+            Click on any pattern in the grid below to select it and view it in the single pattern area above.<br>
+            <strong>Numbers:</strong> Column headers show Length (L) values, row headers show Width (R) values.<br>
+            <strong>Keyboard Navigation:</strong> Use arrow keys (↑↓←→) to navigate between patterns after clicking on the grid.
+        </div>
+        <div id="patternGrid"></div>
+    </div>
+
+    <script src="endless-knot.js"></script>
+    <script>
+        // DOM elements
+        const ldiagSlider = document.getElementById('ldiag');
+        const rdiagSlider = document.getElementById('rdiag');
+        const rotationSlider = document.getElementById('rotation');
+        const scaleSlider = document.getElementById('scale');
+        const lineWidthSlider = document.getElementById('lineWidth');
+        const strokeColorPicker = document.getElementById('strokeColor');
+        
+        const ldiagValue = document.getElementById('ldiagValue');
+        const rdiagValue = document.getElementById('rdiagValue');
+        const rotationValue = document.getElementById('rotationValue');
+        const scaleValue = document.getElementById('scaleValue');
+        const lineWidthValue = document.getElementById('lineWidthValue');
+        
+        const singlePatternCanvas = document.getElementById('singlePatternCanvas');
+        const patternInfo = document.getElementById('patternInfo');
+        const patternGrid = document.getElementById('patternGrid');
+        
+        // Update display values
+        function updateDisplayValues() {
+            ldiagValue.textContent = ldiagSlider.value;
+            rdiagValue.textContent = rdiagSlider.value;
+            rotationValue.textContent = rotationSlider.value + '°';
+            scaleValue.textContent = scaleSlider.value + 'x';
+            lineWidthValue.textContent = lineWidthSlider.value + 'px';
+        }
+        
+        // Update single pattern
+        function updateSinglePattern() {
+            singlePatternCanvas.innerHTML = '';
+            
+            const result = createEndlessKnotPattern('singlePatternCanvas', {
+                containerSize: 1000,
+                ldiag: parseInt(ldiagSlider.value),
+                rdiag: parseInt(rdiagSlider.value),
+                strokeColor: strokeColorPicker.value,
+                lineWidth: parseInt(lineWidthSlider.value),
+                scale: parseFloat(scaleSlider.value),
+                rotation: parseInt(rotationSlider.value)
+            });
+            
+            if (result) {
+                const typeText = result.isEndless ? 'Complete Loop' : 'Multi-part';
+                const typeClass = result.isEndless ? 'endless' : 'multi-loop';
+                patternInfo.innerHTML = `
+                    <strong>Pattern Type:</strong> <span class="${typeClass}">${typeText}</span><br>
+                    <strong>Parameters:</strong> Length=${ldiagSlider.value}, Width=${rdiagSlider.value}<br>
+                    <strong>Points Generated:</strong> ${result.points.length}
+                `;
+            }
+        }
+        
+        // Function to update sliders and single pattern when grid pattern is selected
+        function selectPatternFromGrid(ldiag, rdiag, isEndless) {
+            // Update sliders
+            ldiagSlider.value = ldiag;
+            rdiagSlider.value = rdiag;
+            
+            // Update display values
+            updateDisplayValues();
+            
+            // Update single pattern
+            updateSinglePattern();
+        }
+        
+        // Update pattern grid
+        function updatePatternGrid() {
+            createPatternGrid('patternGrid', {
+                maxL: 105,
+                maxR: 99,
+                cellSize: 10,
+                lineWidth: 1,
+                onPatternSelect: selectPatternFromGrid
+            });
+        }
+        
+        // Event listeners
+        ldiagSlider.addEventListener('input', () => {
+            updateDisplayValues();
+            updateSinglePattern();
+        });
+        
+        rdiagSlider.addEventListener('input', () => {
+            updateDisplayValues();
+            updateSinglePattern();
+        });
+        
+        rotationSlider.addEventListener('input', () => {
+            updateDisplayValues();
+            updateSinglePattern();
+        });
+        
+        scaleSlider.addEventListener('input', () => {
+            updateDisplayValues();
+            updateSinglePattern();
+        });
+        
+        lineWidthSlider.addEventListener('input', () => {
+            updateDisplayValues();
+            updateSinglePattern();
+        });
+        
+        strokeColorPicker.addEventListener('input', updateSinglePattern);
+        
+        // Initialize
+        updateDisplayValues();
+        updateSinglePattern();
+        updatePatternGrid();
+    </script>
+</body>
+</html>
