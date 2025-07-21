@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Endless Knot Pattern Generator</title>
+    <title>Endless Knot Pattern Generator - Өлзий хээ үүсгэгч</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -119,61 +119,68 @@
 </head>
 <body>
     <div class="container">
-        <h1>🔗 Endless Knot Pattern Generator</h1>
+        <h1>⌘ Endless Knot Pattern Generator</h1>
+        <h1>⌘ Өлзий хээ үүсгэгч</h1>
         <p style="text-align: center; color: #666; margin-bottom: 30px;">
             Interactive visualization of endless knot patterns based on mathematical algorithms
+        </p>
+        <p style="text-align: center; color: #666; margin-bottom: 30px;">
+            Математик алгоритмууд дээр суурилсан өлзий хээний интерактив дүрслэл
         </p>
         
         <div class="controls">
             <h3>Pattern Controls</h3>
+            <h3>Хээний тохируулгууд</h3>
             
             <div class="control-group">
-                <label for="ldiag">Length (ldiag):</label>
+                <label for="ldiag">Length (ldiag)/Урт:</label>
                 <input type="range" id="ldiag" min="4" max="105" value="8" step="1">
                 <span class="output-value" id="ldiagValue">8</span>
             </div>
             
             <div class="control-group">
-                <label for="rdiag">Width (rdiag):</label>
+                <label for="rdiag">Width (rdiag)/Өргөн:</label>
                 <input type="range" id="rdiag" min="1" max="99" value="5" step="2">
                 <span class="output-value" id="rdiagValue">5</span>
             </div>
             
             <div class="control-group">
-                <label for="rotation">Rotation:</label>
+                <label for="rotation">Rotation/Эргэлт:</label>
                 <input type="range" id="rotation" min="0" max="360" value="135" step="15">
                 <span class="output-value" id="rotationValue">0°</span>
             </div>
             
             <div class="control-group">
-                <label for="scale">Scale:</label>
+                <label for="scale">Scale/Өсгөлт:</label>
                 <input type="range" id="scale" min="0.1" max="3.0" value="0.9" step="0.1">
                 <span class="output-value" id="scaleValue">0.9x</span>
             </div>
             
             <div class="control-group">
-                <label for="lineWidth">Line Width:</label>
+                <label for="lineWidth">Line Width/Зураасны өргөн:</label>
                 <input type="range" id="lineWidth" min="1" max="10" value="2" step="1">
                 <span class="output-value" id="lineWidthValue">2px</span>
             </div>
             
             <div class="control-group">
-                <label for="strokeColor">Color:</label>
+                <label for="strokeColor">Color/ Өнгө:</label>
                 <input type="color" id="strokeColor" value="#0066cc">
             </div>
         </div>
         
-        <h2>Single Pattern</h2>
+        <h2>Single Pattern/Ганц хээ</h2>
         <div id="singlePattern">
             <div id="singlePatternCanvas"></div>
             <div id="patternInfo" class="pattern-info"></div>
         </div>
         
-        <h2>Pattern Grid (Green = Complete Loop, Red = Multi-part)</h2>
+        <h2>Pattern Grid (Green = Single-loop, Red = Multi-part)</h2>
+        <h2>Хээн хүснэгт (Ногоон = Нэгдмэл өлзий, Улаан = бүрдмэл өлзий)</h2>
         <div class="grid-instructions">
             Click on any pattern in the grid below to select it and view it in the single pattern area above.<br>
-            <strong>Numbers:</strong> Column headers show Length (L) values, row headers show Width (R) values.<br>
-            <strong>Keyboard Navigation:</strong> Use arrow keys (↑↓←→) to navigate between patterns after clicking on the grid.
+            Дурын нэг хээг хүснэгтээс сонгоод ганц хээний хэсэгт харна уу.<br>
+            <strong>Numbers:</strong> Column headers show Length (L) values, row headers show Width (R) values. / Баганы толгойн дугаар хээний уртыг, мөрийн толгойн дугаар хээний өргөнийг заана.<br>
+            <strong>Keyboard Navigation:</strong> Use arrow keys (↑↓←→) to navigate between patterns after clicking on the grid. / Хүснэгдийг дарж идэвхжүүлсний дараа, гарын чиглэлийн товчлууруудыг (↑↓←→) ашиглан хээний сонголтыг өөрчилж болно.
         </div>
         <div id="patternGrid"></div>
     </div>
@@ -222,12 +229,12 @@
             });
             
             if (result) {
-                const typeText = result.isEndless ? 'Complete Loop' : 'Multi-part';
+                const typeText = result.isEndless ? 'Complete Loop/Нэгдмэл' : 'Multi-part/Бүрдмэл';
                 const typeClass = result.isEndless ? 'endless' : 'multi-loop';
                 patternInfo.innerHTML = `
-                    <strong>Pattern Type:</strong> <span class="${typeClass}">${typeText}</span><br>
-                    <strong>Parameters:</strong> Length=${ldiagSlider.value}, Width=${rdiagSlider.value}<br>
-                    <strong>Points Generated:</strong> ${result.points.length}
+                    <strong>Pattern Type/Хээний төрөл:</strong> <span class="${typeClass}">${typeText}</span><br>
+                    <strong>Parameters/Хэмжээс:</strong> Length=${ldiagSlider.value}, Width=${rdiagSlider.value}<br>
+                    <strong>Points Generated/Оройн цэгийн тоо:</strong> ${result.points.length}
                 `;
             }
         }
