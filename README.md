@@ -70,13 +70,6 @@ The algorithm determines whether a pattern is "single-loop" (forms a complete lo
 - **Red patterns**: Finite patterns that don't close properly
 - **Gray cells**: Invalid parameter combinations (length < width)
 
-## Technical Details
-
-The JavaScript version maintains the same mathematical logic as the original Swift code while adapting to web technologies:
-- Points are stored as `{x, y}` objects instead of `CGPoint`
-- Canvas API is used for rendering instead of SwiftUI Path
-- Interactive controls are implemented with HTML5 input elements
-
 ## Browser Compatibility
 
 Works in all modern browsers that support:
