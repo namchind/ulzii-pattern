@@ -2,6 +2,9 @@
 
 A JavaScript implementation of endless knot pattern generation, converted from Swift reference code. This project creates mathematical visualizations of traditional endless knot patterns.
 
+Running demo:
+Github pages - https://namchind.github.io/ulzii-pattern/ 
+
 ## Features
 
 - **Interactive Pattern Generation**: Generate endless knot patterns with customizable parameters
